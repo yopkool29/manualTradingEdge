@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model TradeList {
+  id        Int      @id @default(autoincrement())
+  title     String
+  comment   String
+  trades    Trade[]
+  createdAt DateTime @default(now())
+
+  @@map("trade_lists")
+}
+
+model Trade {
+  id        Int       @id @default(autoincrement())
+  points    Int
+  listId    Int
+  list      TradeList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@map("trades")
+}
+
+model Settings {
+  id          Int      @id @default(autoincrement())
+  pointValues Json     // Stocké comme un tableau JSON [1, 5, 10, -1, -5, -10]
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}

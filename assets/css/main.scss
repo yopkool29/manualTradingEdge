@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+body {
+    // @apply bg-white;
+    @apply text-neutral-700;
+}
+
+@layer components {
+
+    footer {
+        @apply text-neutral-50;
+    }
+
+    .table-linkbutton {
+        @apply link font-normal link-hover select-none;
+    }
+
+    .logwindow {
+        @apply text-[0.9rem] mt-5;
+        
+        .log-normal-text {
+            @apply text-black;
+        }
+
+        .log-info-text {
+            @apply text-blue-700;
+        }
+
+        .log-debug-text {
+            @apply text-black;
+        }
+
+        .log-warn-text {
+            @apply text-orange-500;
+        }
+
+        .log-error-text {
+            @apply text-red-600;
+        }
+
+        &::selection {
+            @apply text-orange-600;
+        }
+
+        &::-moz-selection {
+            @apply text-orange-600;
+        }
+
+        .logmessage {
+            -moz-appearance: textfield-multiline;
+            -webkit-appearance: textarea;
+            @apply border-[1px] border-solid border-gray-400 shadow-none overflow-auto p-1 w-full h-[300px] font-normal text-sm bg-gray-100;
+        }
+    }
+}

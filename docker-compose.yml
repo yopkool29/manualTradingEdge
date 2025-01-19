@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/docker.db
+    volumes:
+      - db_data:/app/data
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+
+  migration:
+    build:
+      context: .
+      target: deps
+    command: >
+      sh -c "
+        mkdir -p /app/data &&
+        touch /app/data/docker.db &&
+        chmod 666 /app/data/docker.db &&
+        npx prisma migrate deploy &&
+        npx prisma db seed
+      "
+    environment:
+      - DATABASE_URL=file:/app/data/docker.db
+    volumes:
+      - db_data:/app/data
+
+volumes:
+  db_data:
+    name: manualedge_db_data
+    driver: local
