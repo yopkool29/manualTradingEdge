@@ -1,0 +1,23 @@
+-- CreateTable
+CREATE TABLE "trade_lists" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "comment" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "trades" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "points" INTEGER NOT NULL,
+    "listId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "trades_listId_fkey" FOREIGN KEY ("listId") REFERENCES "trade_lists" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "settings" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "pointValues" JSONB NOT NULL,
+    "updatedAt" DATETIME NOT NULL
+);

@@ -14,7 +14,13 @@ export default defineEventHandler(async (event) => {
         }
       })
     }
-    return settings
+
+    const sortedPointValues = [...settings.pointValues].sort((a, b) => a - b)
+    return {
+      ...settings,
+      pointValues: sortedPointValues
+    }
+
   }
 
   // PUT /api/settings - Mettre à jour les paramètres

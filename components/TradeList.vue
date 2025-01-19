@@ -71,13 +71,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    (e: 'addTrade', listId: number, points: number): void
+    (e: 'addTrade', points: number): void
     (e: 'deleteTrade', tradeId: number): void
     (e: 'updateComment', tradeId: number, comment: string): void
 }>()
 
 const addTrade = (points: number) => {
-    emit('addTrade', props.list.id, points)
+    emit('addTrade', points)
 }
 
 const deleteTrade = (tradeId: number) => {

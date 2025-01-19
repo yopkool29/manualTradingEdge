@@ -9,15 +9,15 @@ export default defineNuxtConfig({
         '@nuxtjs/color-mode',
         '@nuxt/content',
     ],
-    sourcemap: {
-        server: true,
-        client: true
-    },
-    vite: {
-        build: {
-            sourcemap: true
-        }
-    },
+    // sourcemap: {
+    //     server: true,
+    //     client: true
+    // },
+    // vite: {
+    //     build: {
+    //         sourcemap: true
+    //     }
+    // },
     plugins: [
         // { src: '~/plugins/pinia-persist', mode: 'client' },
     ],
