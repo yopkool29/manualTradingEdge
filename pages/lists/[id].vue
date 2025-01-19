@@ -32,6 +32,7 @@
         :point-values="settings.pointValues"
         @add-trade="addTrade"
         @delete-trade="deleteTrade"
+        @update-comment="updateTradeComment"
       />
     </div>
   </div>
@@ -95,11 +96,28 @@ const addTrade = async (points: number) => {
   try {
     const trade = await $fetch(`/api/lists/${list.value.id}/trades`, {
       method: 'POST',
-      body: { points }
+      body: { points, comment: '' }
     })
     list.value.trades.push(trade)
   } catch (error) {
     console.error('Error adding trade:', error)
+  }
+}
+
+const updateTradeComment = async (tradeId: number, comment: string) => {
+  try {
+    await $fetch(`/api/trades/${tradeId}/comment`, {
+      method: 'PATCH',
+      body: { comment }
+    })
+    if (list.value) {
+      const trade = list.value.trades.find(t => t.id === tradeId)
+      if (trade) {
+        trade.comment = comment
+      }
+    }
+  } catch (error) {
+    console.error('Error updating trade comment:', error)
   }
 }
 </script>

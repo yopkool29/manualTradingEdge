@@ -20,6 +20,7 @@ model TradeList {
 model Trade {
   id        Int       @id @default(autoincrement())
   points    Int
+  comment   String    @default("")
   listId    Int
   list      TradeList @relation(fields: [listId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())

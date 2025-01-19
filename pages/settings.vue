@@ -69,12 +69,14 @@
         </div>
 
         <div class="flex justify-end">
-          <button
-            type="submit"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
+
+            <UButton color="green" variant="solid"
+              type="submit"
+            >
             Enregistrer
-          </button>
+            </UButton>
+
+
         </div>
       </form>
     </div>

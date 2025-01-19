@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
   return await prisma.trade.create({
     data: {
       points: body.points,
+      comment: body.comment || "",
       listId: listId
     }
   })

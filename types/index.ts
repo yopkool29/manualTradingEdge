@@ -1,6 +1,7 @@
 export type Trade = {
   id: number
   points: number
+  comment: string
   listId: number
   createdAt: Date
 }

@@ -3,54 +3,53 @@
     <!-- En-tête avec bouton d'ajout -->
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Listes</h1>
-      <button
+      <UButton
         @click="showNewListModal = true"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+        color="green"
+        variant="solid"
       >
         Nouvelle Liste
-      </button>
+      </UButton>
     </div>
 
     <!-- Modal pour nouvelle liste -->
-    <div v-if="showNewListModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg w-full max-w-md">
+    <UModal v-model="showNewListModal">
+      <div class="p-6 rounded-lg w-full max-w-md">
         <h2 class="text-xl font-semibold mb-4">Nouvelle Liste</h2>
         <form @submit.prevent="createList">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Titre</label>
-            <input
+          <UFormGroup label="Titre" class="mb-4">
+            <UInput
               v-model="newList.title"
               type="text"
               required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              placeholder="Entrez le titre de la liste"
             />
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Commentaire</label>
-            <textarea
+          </UFormGroup>
+          <UFormGroup label="Commentaire" class="mb-4">
+            <UTextarea
               v-model="newList.comment"
               required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            ></textarea>
-          </div>
+              placeholder="Entrez un commentaire"
+              :rows="4"
+            />
+          </UFormGroup>
           <div class="flex justify-end space-x-2">
-            <button
-              type="button"
+            <UButton
               @click="showNewListModal = false"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
+              color="white" variant="solid"
             >
               Annuler
-            </button>
-            <button
+            </UButton>
+            <UButton
               type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+              color="green" variant="solid"
             >
               Créer
-            </button>
+            </UButton>
           </div>
         </form>
       </div>
-    </div>
+    </UModal>
 
     <!-- Liste des trades -->
     <div class="space-y-6">
@@ -62,18 +61,20 @@
             <p class="text-sm text-gray-500">Créé le {{ new Date(list.createdAt).toLocaleDateString() }}</p>
           </div>
           <div class="flex space-x-2">
-            <button
+            <UButton
               @click="router.push(`/lists/${list.id}`)"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+              color="green"
+              variant="solid"
             >
               Voir détails
-            </button>
-            <button
+            </UButton>
+            <UButton
               @click="deleteList(list.id)"
-              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+              color="red"
+              variant="solid"
             >
               Supprimer
-            </button>
+            </UButton>
           </div>
         </div>
         <div class="text-gray-600">

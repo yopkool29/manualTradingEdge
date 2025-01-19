@@ -47,7 +47,7 @@ function main() {
                     if (!!settings) return [3 /*break*/, 3];
                     return [4 /*yield*/, prisma.settings.create({
                             data: {
-                                pointValues: [1, 2, 3, 4, 5]
+                                pointValues: [2, 5, 10, 15, 20, -2, -5, -10, -15, -20]
                             }
                         })];
                 case 2:
