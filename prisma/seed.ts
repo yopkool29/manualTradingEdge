@@ -8,7 +8,7 @@ async function main() {
   if (!settings) {
     await prisma.settings.create({
       data: {
-        pointValues: [1, 2, 3, 4, 5]
+        pointValues: [2, 5, 10, 15, 20, -2, -5, -10, -15, -20]
       }
     })
   }
