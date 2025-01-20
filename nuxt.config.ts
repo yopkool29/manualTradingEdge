@@ -24,7 +24,7 @@ export default defineNuxtConfig({
             { code: 'en', iso: 'en-US', file: 'en.js' },
             { code: 'fr', iso: 'fr-FR', file: 'fr.js' },
         ],
-        defaultLocale: 'fr',
+        defaultLocale: 'en',
         lazy: true,
         langDir: 'locales',
         strategy: 'no_prefix',
@@ -61,4 +61,11 @@ export default defineNuxtConfig({
         classSuffix: '',
     },
     devtools: { enabled: true },
+    app: {
+        head: {
+          link: [
+            { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+          ]
+        }
+    },
 })

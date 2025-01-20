@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#1E40AF"/>
+  
+  <!-- MTE text -->
+  <text x="16" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="14" fill="white">
+    MTE
+  </text>
+  
+  <!-- Trading arrow -->
+  <path d="M8 16L12 12L16 16L20 12" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

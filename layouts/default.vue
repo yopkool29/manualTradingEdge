@@ -3,7 +3,12 @@
         <!-- En-tête -->
         <header class="bg-white shadow">
             <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <ul class="flex space-x-4">
+                <ul class="flex space-x-4 items-center">
+                    <li class="mr-8">
+                        <NuxtLink to="/" class="flex items-center">
+                            <Logo :width="280" :height="40" />
+                        </NuxtLink>
+                    </li>
                     <li>
                         <NuxtLink to="/" class="text-gray-700 hover:text-gray-900">{{ $t('menu.home') }}</NuxtLink>
                     </li>

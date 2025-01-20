@@ -16,6 +16,7 @@ COPY prisma ./prisma/
 COPY tsconfig.json ./
 COPY tailwind.config.ts ./
 COPY nuxt.config.ts ./
+COPY i18n ./i18n/
 
 RUN pnpm install
 

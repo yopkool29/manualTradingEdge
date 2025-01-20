@@ -17,3 +17,10 @@ export type TradeList = {
 export type Settings = {
   pointValues: number[]  // Les valeurs pour les boutons rapides (+1, +5, etc.)
 }
+
+// Component Types
+export interface LogoProps {
+    width?: number
+    height?: number
+    isDark?: boolean
+}
