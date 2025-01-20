@@ -2,34 +2,34 @@
   <div>
     <!-- En-tête avec bouton d'ajout -->
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold">Listes</h1>
+      <h1 class="text-2xl font-bold">{{ $t('lists.title') }}</h1>
       <UButton
         @click="showNewListModal = true"
         color="green"
         variant="solid"
       >
-        Nouvelle Liste
+        {{ $t('lists.newList') }}
       </UButton>
     </div>
 
     <!-- Modal pour nouvelle liste -->
     <UModal v-model="showNewListModal">
       <div class="p-6 rounded-lg w-full max-w-md">
-        <h2 class="text-xl font-semibold mb-4">Nouvelle Liste</h2>
+        <h2 class="text-xl font-semibold mb-4">{{ $t('lists.newList') }}</h2>
         <form @submit.prevent="createList">
-          <UFormGroup label="Titre" class="mb-4">
+          <UFormGroup :label="$t('lists.form.title')" class="mb-4">
             <UInput
               v-model="newList.title"
               type="text"
               required
-              placeholder="Entrez le titre de la liste"
+              :placeholder="$t('lists.form.titlePlaceholder')"
             />
           </UFormGroup>
-          <UFormGroup label="Commentaire" class="mb-4">
+          <UFormGroup :label="$t('lists.form.comment')" class="mb-4">
             <UTextarea
               v-model="newList.comment"
               required
-              placeholder="Entrez un commentaire"
+              :placeholder="$t('lists.form.commentPlaceholder')"
               :rows="4"
             />
           </UFormGroup>
@@ -38,13 +38,13 @@
               @click="showNewListModal = false"
               color="white" variant="solid"
             >
-              Annuler
+              {{ $t('lists.form.cancel') }}
             </UButton>
             <UButton
               type="submit"
               color="green" variant="solid"
             >
-              Créer
+              {{ $t('lists.form.create') }}
             </UButton>
           </div>
         </form>
@@ -58,7 +58,7 @@
           <div>
             <h2 class="text-xl font-semibold">{{ list.title }}</h2>
             <p class="text-gray-600">{{ list.comment }}</p>
-            <p class="text-sm text-gray-500">Créé le {{ new Date(list.createdAt).toLocaleDateString() }}</p>
+            <p class="text-sm text-gray-500">{{ $t('lists.created') }} {{ new Date(list.createdAt).toLocaleDateString() }}</p>
           </div>
           <div class="flex space-x-2">
             <UButton
@@ -66,19 +66,19 @@
               color="green"
               variant="solid"
             >
-              Voir détails
+              {{ $t('lists.viewDetails') }}
             </UButton>
             <UButton
               @click="deleteList(list.id)"
               color="red"
               variant="solid"
             >
-              Supprimer
+              {{ $t('lists.delete') }}
             </UButton>
           </div>
         </div>
         <div class="text-gray-600">
-          {{ list.trades?.length || 0 }} trades
+          {{ $t('lists.tradesCount', { count: list.trades?.length || 0 }) }}
         </div>
       </div>
     </div>
@@ -89,6 +89,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { TradeList, Settings } from '~/types'
+const { t } = useI18n()
 
 const router = useRouter()
 const lists = ref<TradeList[] | undefined>([])
@@ -151,7 +152,7 @@ const addTrade = async (listId: number, points: number) => {
 
 // Supprimer une liste
 const deleteList = async (listId: number) => {
-  if (!confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')) {
+  if (!confirm(t('lists.confirmDelete'))) {
     return
   }
 

@@ -1,36 +1,42 @@
 import prisma from '~/server/db/client'
 
 export default defineEventHandler(async (event) => {
-  const id = Number(event.context.params?.id)
+    const id = Number(event.context.params?.id)
+    const query = getQuery(event)
+    const deleteType = query.deleteType as string
 
-  if (!id || isNaN(id)) {
-    throw createError({
-      statusCode: 400,
-      message: 'Invalid list ID'
-    })
-  }
+    // console.log(deleteType)
 
-  try {
-    // Delete all trades associated with the list first
-    await prisma.trade.deleteMany({
-      where: {
-        listId: id
-      }
-    })
+    if (!id || isNaN(id)) {
+        throw createError({
+            statusCode: 400,
+            message: 'Invalid list ID',
+        })
+    }
 
-    // Then delete the list itself
-    await prisma.tradeList.delete({
-      where: {
-        id: id
-      }
-    })
+    try {
+        // Delete all trades associated with the list
+        await prisma.trade.deleteMany({
+            where: {
+                listId: id,
+            },
+        })
 
-    return { success: true }
-  } catch (error) {
-    console.error('Error deleting list:', error)
-    throw createError({
-      statusCode: 500,
-      message: 'Error deleting list'
-    })
-  }
+        // Only delete the list itself if deleteType is not 'trades-only'
+        if (deleteType !== 'trades-only') {
+            await prisma.tradeList.delete({
+                where: {
+                    id: id,
+                },
+            })
+        }
+
+        return { success: true }
+    } catch (error) {
+        console.error('Error deleting list:', error)
+        throw createError({
+            statusCode: 500,
+            message: 'Error deleting list',
+        })
+    }
 })

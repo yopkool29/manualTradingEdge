@@ -3,7 +3,7 @@
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center space-x-4">
                 <button @click="router.push('/')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center">
-                    <span class="mr-2">←</span> Back
+                    <span class="mr-2">←</span> {{ $t('trades.back') }}
                 </button>
             </div>
         </div>
@@ -12,10 +12,10 @@
             <div class="mb-6">
                 <input v-model="list.title" @blur="updateList" class="text-2xl font-bold w-full mb-2 px-2 py-1 border rounded focus:outline-none focus:border-blue-500" />
                 <textarea v-model="list.comment" @blur="updateList" class="w-full px-2 py-1 border rounded focus:outline-none focus:border-blue-500 text-gray-600" rows="2"></textarea>
-                <p class="text-sm text-gray-500 mt-2">Created on {{ new Date(list.createdAt).toLocaleDateString('en-US') }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ $t('trades.createdOn') }} {{ new Date(list.createdAt).toLocaleDateString() }}</p>
             </div>
 
-            <TradeList :list="list" :point-values="settings.pointValues" @add-trade="addTrade" @delete-trade="deleteTrade" @update-comment="updateTradeComment" />
+            <TradeList :list="list" :point-values="settings.pointValues" @add-trade="addTrade" @delete-trade="deleteTrade" @update-comment="updateTradeComment" @clear-trades="clearAllTrades" />
         </div>
     </div>
 </template>
@@ -100,6 +100,21 @@ const updateTradeComment = async (tradeId: number, comment: string) => {
         }
     } catch (error) {
         console.error('Error updating trade comment:', error)
+    }
+}
+
+const clearAllTrades = async () => {
+    if (!list.value) return
+    try {
+        await $fetch(`/api/lists/${list.value.id}`, {
+            method: 'DELETE',
+            query: {
+                deleteType: 'trades-only'
+            }
+        })
+        list.value.trades = []
+    } catch (error) {
+        console.error('Error clearing trades:', error)
     }
 }
 </script>

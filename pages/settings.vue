@@ -1,15 +1,15 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-6">Paramètres</h1>
+    <h1 class="text-2xl font-bold mb-6">{{ $t('settings.title') }}</h1>
 
     <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Valeurs des Points</h2>
+      <h2 class="text-xl font-semibold mb-4">{{ $t('settings.pointValues') }}</h2>
       
       <form @submit.prevent="saveSettings" class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <!-- Points positifs -->
           <div>
-            <h3 class="font-medium mb-2">Points Positifs</h3>
+            <h3 class="font-medium mb-2">{{ $t('settings.positivePoints') }}</h3>
             <div class="space-y-2">
               <div v-for="(value, index) in positivePoints" :key="index" class="flex items-center space-x-2">
                 <input
@@ -32,14 +32,14 @@
                 @click="addPositivePoint"
                 class="text-sm text-blue-500 hover:text-blue-600"
               >
-                + Ajouter une valeur
+                + {{ $t('settings.addValue') }}
               </button>
             </div>
           </div>
 
           <!-- Points négatifs -->
           <div>
-            <h3 class="font-medium mb-2">Points Négatifs</h3>
+            <h3 class="font-medium mb-2">{{ $t('settings.negativePoints') }}</h3>
             <div class="space-y-2">
               <div v-for="(value, index) in negativePoints" :key="index" class="flex items-center space-x-2">
                 <input
@@ -62,21 +62,16 @@
                 @click="addNegativePoint"
                 class="text-sm text-blue-500 hover:text-blue-600"
               >
-                + Ajouter une valeur
+                + {{ $t('settings.addValue') }}
               </button>
             </div>
           </div>
         </div>
 
         <div class="flex justify-end">
-
-            <UButton color="green" variant="solid"
-              type="submit"
-            >
-            Enregistrer
+            <UButton color="green" variant="solid" type="submit">
+              {{ $t('settings.save') }}
             </UButton>
-
-
         </div>
       </form>
     </div>
@@ -94,7 +89,7 @@ const negativePoints = ref<number[]>([])
 onMounted(async () => {
   try {
     const settings = await $fetch('/api/settings')
-    const pointValues: number[] = settings.pointValues
+    const pointValues: number[] = settings?.pointValues as number[]
 
     positivePoints.value = pointValues.filter(v => v > 0).sort((a, b) => a - b)
     negativePoints.value = pointValues.filter(v => v < 0).sort((a, b) => b - a)

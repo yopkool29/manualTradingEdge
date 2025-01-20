@@ -8,6 +8,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@nuxtjs/color-mode',
         '@nuxt/content',
+        '@nuxtjs/i18n',
     ],
     // sourcemap: {
     //     server: true,
@@ -18,6 +19,26 @@ export default defineNuxtConfig({
     //         sourcemap: true
     //     }
     // },
+    i18n: {
+        locales: [
+            { code: 'en', iso: 'en-US', file: 'en.js' },
+            { code: 'fr', iso: 'fr-FR', file: 'fr.js' },
+        ],
+        defaultLocale: 'fr',
+        lazy: true,
+        langDir: 'locales',
+        strategy: 'no_prefix',
+        // detectBrowserLanguage: {
+        //     useCookie: true,
+        //     cookieKey: 'i18n_redirected',
+        //     redirectOn: 'root',
+        // },
+        // vueI18n: {
+        //     legacy: false,
+        //     locale: 'fr',
+        //     fallbackLocale: 'fr',
+        // }
+    },
     plugins: [
         // { src: '~/plugins/pinia-persist', mode: 'client' },
     ],

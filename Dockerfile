@@ -1,5 +1,5 @@
 # Dependencies stage
-FROM node:20-alpine AS deps
+FROM node:18.20-alpine AS deps
 
 WORKDIR /app
 
@@ -14,8 +14,9 @@ RUN corepack enable \
 COPY package.json ./
 COPY prisma ./prisma/
 COPY tsconfig.json ./
+COPY tailwind.config.ts ./
+COPY nuxt.config.ts ./
 
-# Install dependencies
 RUN pnpm install
 
 # Compile seed.ts to seed.js
@@ -25,7 +26,7 @@ RUN npx tsc prisma/seed.ts --outDir prisma --module ES2020 --moduleResolution no
 RUN npx prisma generate
 
 # Builder stage
-FROM node:20-alpine AS builder
+FROM node:18.20-alpine AS builder
 
 WORKDIR /app
 
@@ -33,19 +34,21 @@ WORKDIR /app
 RUN corepack enable \
     && corepack prepare pnpm@9.15.4 --activate
 
-# Copy from deps stage
+# Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/package.json ./
 COPY --from=deps /app/prisma ./prisma/
 
 # Copy source files
 COPY . .
 
+# Run nuxt prepare before build
+RUN pnpm nuxt prepare
+
 # Build application
 RUN pnpm build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:18.20-alpine AS production
 
 WORKDIR /app
 
@@ -55,8 +58,7 @@ RUN mkdir -p /app/data && chmod 777 /app/data
 # Copy only necessary files
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/prisma ./prisma
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
 # Expose port
 EXPOSE 3000
