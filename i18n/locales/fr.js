@@ -26,6 +26,8 @@ export default {
   },
   settings: {
     title: 'Paramètres',
+    general: 'Général',
+    winrateForNull: 'Impact sur le winrate quand un trade est +0',
     pointValues: 'Valeurs des Points',
     positivePoints: 'Points Positifs',
     negativePoints: 'Points Négatifs',

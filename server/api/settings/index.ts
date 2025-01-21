@@ -10,7 +10,8 @@ export default defineEventHandler(async (event) => {
       // Créer les paramètres par défaut si ils n'existent pas
       return await prisma.settings.create({
         data: {
-          pointValues: [1, 5, 10, -1, -5, -10]
+          pointValues: [1, 5, 10, -1, -5, -10],
+          options: { winrateForNull: false }
         }
       })
     }
@@ -18,7 +19,8 @@ export default defineEventHandler(async (event) => {
     const sortedPointValues = [...settings.pointValues].sort((a, b) => a - b)
     return {
       ...settings,
-      pointValues: sortedPointValues
+      pointValues: sortedPointValues,
+      options: settings.options || { winrateForNull: false }
     }
 
   }
@@ -32,14 +34,16 @@ export default defineEventHandler(async (event) => {
       return await prisma.settings.update({
         where: { id: settings.id },
         data: {
-          pointValues: body.pointValues
+          pointValues: body.pointValues,
+          options: body.options
         }
       })
     }
 
     return await prisma.settings.create({
       data: {
-        pointValues: body.pointValues
+        pointValues: body.pointValues,
+        options: { winrateForNull: false }
       }
     })
   }

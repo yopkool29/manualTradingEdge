@@ -95,6 +95,17 @@ const emit = defineEmits<{
     (e: 'clearTrades'): void
 }>()
 
+const settings = ref<any>(null)
+
+// Charger les paramètres
+onMounted(async () => {
+    try {
+        settings.value = await $fetch('/api/settings')
+    } catch (error) {
+        console.error('Erreur lors du chargement des paramètres:', error)
+    }
+})
+
 const addTrade = (points: number) => {
     emit('addTrade', points)
 }
@@ -115,15 +126,19 @@ const clearTrades = () => {
 
 const getCumulativeSum = (currentIndex: number): number => {
     if (!props.list?.trades) return 0
-    return props.list.trades
-        .slice(0, currentIndex + 1)
+    return [...props.list.trades]
+        .reverse()
+        .slice(currentIndex)
         .reduce((sum, trade) => sum + trade.points, 0)
 }
 
 const getWinRate = (): number => {
     if (!props.list?.trades || props.list.trades.length === 0) return 0
     const winningTrades = props.list.trades.filter(trade => trade.points > 0).length
-    return Math.round((winningTrades / props.list.trades.length) * 100)
+    const totalTrades = settings.value?.options?.winrateForNull 
+        ? props.list.trades.length 
+        : props.list.trades.filter(trade => trade.points !== 0).length
+    return Math.round((winningTrades / totalTrades) * 100)
 }
 
 </script>

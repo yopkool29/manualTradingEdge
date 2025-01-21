@@ -31,6 +31,7 @@ model Trade {
 model Settings {
   id          Int      @id @default(autoincrement())
   pointValues Json     // Stocké comme un tableau JSON [1, 5, 10, -1, -5, -10]
+  options     Json     // Pour stocker les options supplémentaires
   updatedAt   DateTime @updatedAt
 
   @@map("settings")

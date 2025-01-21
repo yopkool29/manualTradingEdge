@@ -26,6 +26,8 @@ export default {
   },
   settings: {
     title: 'Settings',
+    general: 'General',
+    winrateForNull: 'Winrate impact when trade is +0',
     pointValues: 'Point Values',
     positivePoints: 'Positive Points',
     negativePoints: 'Negative Points',
