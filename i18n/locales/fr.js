@@ -33,7 +33,7 @@ export default {
     save: 'Enregistrer'
   },
   trades: {
-    clearAll: 'Effacer les trades',
+    clearAll: 'Effacer tous les trades',
     confirmClear: 'Effacer tous les trades ?',
     back: 'Retour',
     number: 'N°',
