@@ -91,7 +91,7 @@ onMounted(async () => {
     const settings = await $fetch('/api/settings')
     const pointValues: number[] = settings?.pointValues as number[]
 
-    positivePoints.value = pointValues.filter(v => v > 0).sort((a, b) => a - b)
+    positivePoints.value = pointValues.filter(v => v >= 0).sort((a, b) => a - b)
     negativePoints.value = pointValues.filter(v => v < 0).sort((a, b) => b - a)
   } catch (error) {
     console.error('Erreur lors du chargement des paramètres:', error)
