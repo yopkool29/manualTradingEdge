@@ -5,7 +5,7 @@ async function main() {
   if (!settings) {
     await prisma.settings.create({
       data: {
-        pointValues: [2, 5, 10, 15, 20, -2, -5, -10, -15, -20]
+        pointValues: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -20]
       }
     });
   }
