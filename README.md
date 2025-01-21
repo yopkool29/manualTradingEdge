@@ -1,13 +1,12 @@
 # ManualTradingEdge - Futures Trading Backtesting Platform
 
-ManualTradingEdge is a simple backtesting platform designed specifically for futures market trading strategies. This tool allows traders to analyze and validate their trading strategies using historical market data. Initially used on Renko charts, it has since expanded to support other market data sources.
+ManualTradingEdge is a simple backtesting platform designed specifically for futures market trading strategies. This tool allows traders to analyze and validate their own trading strategies. Initially used on Renko charts, it has since expanded to support other market data sources.
 
 ![Alt text](screenshots/1.png?raw=true "screenshot 1")
 
 ## Features
 
 - Manual Backtesting for futures trading strategies but can be used for other markets
-- Historical data management for various futures indices
 - Interactive web interface for easy strategy testing
 
 ## Prerequisites
