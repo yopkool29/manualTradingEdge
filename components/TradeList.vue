@@ -2,7 +2,7 @@
     <div class="bg-white shadow rounded-lg p-6">
         <div class="mb-4">
             <h2 class="text-xl font-semibold">{{ list.title }}</h2>
-            <p class="text-gray-600">{{ list.comment }}</p>
+            <p class="text-gray-600 whitespace-pre-wrap">{{ list.comment }}</p>
         </div>
 
         <div class="flex items-center gap-4 mb-4">
