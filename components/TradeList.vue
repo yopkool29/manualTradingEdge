@@ -34,24 +34,23 @@
                 {{ value > 0 ? '+' : '' }}{{ value }}
             </UButton>
         </div>
-        
-        <div class="mt-4 max-w-lg">
-            <div class="grid grid-cols-[auto_1fr_1fr_2fr] gap-4 mb-2 font-medium text-gray-600 px-3">
-                <div class="flex items-center justify-between">{{ $t('trades.number') }}</div>
+        <div class="mt-4 max-w-6xl">
+            <div class="grid grid-cols-[120px_100px_120px_1fr] gap-4 mb-2 font-medium text-gray-600 px-3">
+                <div>{{ $t('trades.number') }}</div>
                 <div>{{ $t('trades.points') }}</div>
                 <div>{{ $t('trades.cumulative') }}</div>
                 <div>{{ $t('trades.comment') }}</div>
             </div>
             <div class="space-y-2">
-                <div v-for="(trade, index) in [...list.trades].reverse()" :key="trade.id" class="grid grid-cols-[auto_1fr_1fr_2fr] gap-4 items-center p-3 bg-gray-50 rounded group">
-                    <div class="text-gray-600 flex items-center justify-between gap-4">
+                <div v-for="(trade, index) in [...list.trades].reverse()" :key="trade.id" class="grid grid-cols-[120px_100px_120px_1fr] gap-4 items-center p-3 bg-gray-50 rounded group">
+                    <div class="text-gray-600 flex items-center justify-around gap-4">
+                        <span>#{{ list.trades.length - index }}</span>
                         <UButton
                             @click="deleteTrade(trade.id)"
                             color="red"
                             variant="ghost"
                             icon="i-heroicons-x-mark"
                         />
-                        <span>#{{ list.trades.length - index }}</span>
                     </div>
                     <div :class="trade.points >= 0 ? 'text-green-600' : 'text-red-600'">
                         {{ trade.points > 0 ? '+' : '' }}{{ trade.points }}
@@ -61,12 +60,12 @@
                             {{ getCumulativeSum([...list.trades].reverse().indexOf(trade)) > 0 ? '+' : '' }}{{ getCumulativeSum([...list.trades].reverse().indexOf(trade)) }}
                         </span>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 w-full">
                         <UInput
                             v-model="trade.comment"
                             @change="updateTradeComment(trade.id, trade.comment)"
                             :placeholder="$t('trades.commentPlaceholder')"
-                            size="sm"
+                            class="w-full"
                         />
                     </div>
                 </div>
