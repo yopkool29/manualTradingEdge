@@ -11,17 +11,15 @@ RUN corepack enable \
     && corepack prepare pnpm@9.15.4 --activate
 
 # Copy package files and prisma schema
-COPY package.json ./
+COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
-COPY tsconfig.json ./
-COPY tailwind.config.ts ./
-COPY nuxt.config.ts ./
-COPY i18n ./i18n/
 
 RUN pnpm install
 
-# Compile seed.ts to seed.js
-RUN npx tsc prisma/seed.ts --outDir prisma --module ES2020 --moduleResolution node
+COPY tsconfig.json ./
+COPY tailwind.config.js ./
+COPY nuxt.config.ts ./
+COPY i18n ./i18n/
 
 # Generate Prisma Client
 RUN npx prisma generate

@@ -11,8 +11,10 @@ model TradeList {
   id        Int      @id @default(autoincrement())
   title     String
   comment   String
+  mode      String   @default("normal")
   trades    Trade[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("trade_lists")
 }
