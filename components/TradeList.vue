@@ -16,6 +16,7 @@
                 <span class="font-medium">Mode: </span>
                 <select v-model="selectedMode" class="ml-2 p-1 rounded border">
                     <option value="normal">Normal</option>
+                    <option value="mode0">TP fixe</option>
                     <option value="mode1">TP fixe + TSL</option>
                 </select>
             </div>
@@ -31,20 +32,20 @@
         </div>
         <div class="mt-4 max-w-6xl">
             <div class="grid gap-4 mb-2 font-medium text-gray-600 px-3" :class="{
-                'grid-cols-[120px_100px_120px_120px_120px_1fr]': selectedMode === 'mode1',
-                'grid-cols-[120px_100px_120px_1fr]': selectedMode !== 'mode1'
+                'grid-cols-[120px_100px_120px_120px_120px_1fr]': isGainMode(),
+                'grid-cols-[120px_100px_120px_1fr]': !isGainMode()
             }">
                 <div>{{ $t('trades.number') }}</div>
                 <div>{{ $t('trades.points') }}</div>
                 <div>{{ $t('trades.cumulative') }}</div>
-                <div v-if="selectedMode === 'mode1'">Gain</div>
-                <div v-if="selectedMode === 'mode1'">Cumul Gain</div>
+                <div v-if="isGainMode()">Gain</div>
+                <div v-if="isGainMode()">Cumul Gain</div>
                 <div>{{ $t('trades.comment') }}</div>
             </div>
             <div class="space-y-2">
                 <div v-for="(trade, index) in [...list.trades].reverse()" :key="trade.id" class="grid gap-4 items-center p-3 bg-gray-50 rounded group" :class="{
-                    'grid-cols-[120px_100px_120px_120px_120px_1fr]': selectedMode === 'mode1',
-                    'grid-cols-[120px_100px_120px_1fr]': selectedMode !== 'mode1'
+                    'grid-cols-[120px_100px_120px_120px_120px_1fr]': isGainMode(),
+                    'grid-cols-[120px_100px_120px_1fr]': !isGainMode()
                 }">
                     <div class="text-gray-600 flex items-center justify-around gap-4">
                         <span>#{{ list.trades.length - index }}</span>
@@ -58,12 +59,12 @@
                             {{ formatValue(getCumulativeSum([...list.trades].reverse().indexOf(trade))) }}
                         </span>
                     </div>
-                    <div v-if="selectedMode === 'mode1'">
+                    <div v-if="isGainMode()">
                         <span :class="getValueClass(getGainValue(trade))">
                             {{ formatValue(getGainValue(trade)) }}
                         </span>
                     </div>
-                    <div v-if="selectedMode === 'mode1'">
+                    <div v-if="isGainMode()">
                         <span :class="getValueClass(getCumulativeGain([...list.trades].reverse().indexOf(trade)))">
                             {{ formatValue(getCumulativeGain([...list.trades].reverse().indexOf(trade))) }}
                         </span>
@@ -100,6 +101,10 @@ const emit = defineEmits<{
 
 const settings = ref<any>(null)
 const selectedMode = ref(props.list.mode || 'normal')
+
+const isGainMode = () => {
+    return selectedMode.value === 'mode1' || selectedMode.value === 'mode0'
+}
 
 // Émettre un événement quand le mode change
 watch(selectedMode, async (newMode) => {
