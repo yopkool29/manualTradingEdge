@@ -4,7 +4,6 @@ export default defineNuxtConfig({
     modules: [
         '@nuxt/ui',
         '@pinia/nuxt',
-        '@pinia-plugin-persistedstate/nuxt',
         '@nuxtjs/tailwindcss',
         '@nuxtjs/color-mode',
         '@nuxt/content',

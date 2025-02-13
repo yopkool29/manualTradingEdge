@@ -19,13 +19,28 @@ services:
       context: .
       target: deps
     command: >
-      sh -c "
-        mkdir -p /app/data &&
-        touch /app/data/docker.db &&
-        chmod 666 /app/data/docker.db &&
-        npx prisma migrate deploy &&
-        npx prisma db seed
-      "
+      sh -c '
+        mkdir -p /app/data
+
+        if [ ! -f /app/data/docker.db ]; then
+          echo "Fresh database, will run seed after migration"
+          touch /app/data/docker.db
+          chmod 666 /app/data/docker.db
+          echo "true" > /app/data/seed.flag
+        else
+          echo "Database already exists"
+          echo "false" > /app/data/seed.flag
+        fi
+
+        npx prisma migrate deploy
+        
+        if [ "$(cat /app/data/seed.flag)" = "true" ]; then
+          echo "Running seed..."
+          npx prisma db seed
+        else
+          echo "Database already seeded, skipping"
+        fi
+      '
     environment:
       - DATABASE_URL=file:/app/data/docker.db
     volumes:

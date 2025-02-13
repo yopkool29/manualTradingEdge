@@ -8,65 +8,69 @@
         <div class="flex items-center gap-4 mb-4">
             <div class="bg-gray-50 rounded p-3">
                 <span class="font-medium">Win Rate: </span>
-                <span :class="getWinRate() >= 50 ? 'text-green-600' : 'text-red-600'">
-                    {{ getWinRate() }}%
+                <span :class="getValueClass(getWinRateValue())">
+                    {{ formatValue(getWinRateValue()) }}
                 </span>
             </div>
-            <UButton
-                v-if="list.trades.length > 0"
-                @click="clearTrades"
-                color="red"
-                variant="soft"
-                icon="i-heroicons-trash"
-            >
+            <div class="bg-gray-50 rounded p-3">
+                <span class="font-medium">Mode: </span>
+                <select v-model="selectedMode" class="ml-2 p-1 rounded border">
+                    <option value="normal">Normal</option>
+                    <option value="mode0">TP fixe</option>
+                    <option value="mode1">TP fixe + TSL</option>
+                </select>
+            </div>
+            <UButton v-if="list.trades.length > 0" @click="clearTrades" color="red" variant="soft" icon="i-heroicons-trash">
                 {{ $t('trades.clearAll') }}
             </UButton>
         </div>
 
         <div class="flex flex-wrap gap-2 mb-6 mt-6">
-            <UButton
-                v-for="value in pointValues"
-                :key="value"
-                @click="addTrade(value)"
-                :color="value > 0 ? 'green' : 'red'"
-                variant="solid"
-            >
-                {{ value > 0 ? '+' : '' }}{{ value }}
+            <UButton v-for="value in pointValues" :key="value" @click="addTrade(value)" :color="value > 0 ? 'green' : 'red'" variant="solid">
+                {{ formatValue(value) }}
             </UButton>
         </div>
         <div class="mt-4 max-w-6xl">
-            <div class="grid grid-cols-[120px_100px_120px_1fr] gap-4 mb-2 font-medium text-gray-600 px-3">
+            <div class="grid gap-4 mb-2 font-medium text-gray-600 px-3" :class="{
+                'grid-cols-[120px_100px_120px_120px_120px_1fr]': isGainMode(),
+                'grid-cols-[120px_100px_120px_1fr]': !isGainMode()
+            }">
                 <div>{{ $t('trades.number') }}</div>
                 <div>{{ $t('trades.points') }}</div>
                 <div>{{ $t('trades.cumulative') }}</div>
+                <div v-if="isGainMode()">Gain</div>
+                <div v-if="isGainMode()">Cumul Gain</div>
                 <div>{{ $t('trades.comment') }}</div>
             </div>
             <div class="space-y-2">
-                <div v-for="(trade, index) in [...list.trades].reverse()" :key="trade.id" class="grid grid-cols-[120px_100px_120px_1fr] gap-4 items-center p-3 bg-gray-50 rounded group">
+                <div v-for="(trade, index) in [...list.trades].reverse()" :key="trade.id" class="grid gap-4 items-center p-3 bg-gray-50 rounded group" :class="{
+                    'grid-cols-[120px_100px_120px_120px_120px_1fr]': isGainMode(),
+                    'grid-cols-[120px_100px_120px_1fr]': !isGainMode()
+                }">
                     <div class="text-gray-600 flex items-center justify-around gap-4">
                         <span>#{{ list.trades.length - index }}</span>
-                        <UButton
-                            @click="deleteTrade(trade.id)"
-                            color="red"
-                            variant="ghost"
-                            icon="i-heroicons-x-mark"
-                        />
+                        <UButton @click="deleteTrade(trade.id)" color="red" variant="ghost" icon="i-heroicons-x-mark" />
                     </div>
-                    <div :class="trade.points >= 0 ? 'text-green-600' : 'text-red-600'">
-                        {{ trade.points > 0 ? '+' : '' }}{{ trade.points }}
+                    <div :class="getValueClass(trade.points)">
+                        {{ formatValue(trade.points) }}
                     </div>
                     <div>
-                        <span :class="getCumulativeSum([...list.trades].reverse().indexOf(trade)) >= 0 ? 'text-green-600' : 'text-red-600'">
-                            {{ getCumulativeSum([...list.trades].reverse().indexOf(trade)) > 0 ? '+' : '' }}{{ getCumulativeSum([...list.trades].reverse().indexOf(trade)) }}
+                        <span :class="getValueClass(getCumulativeSum([...list.trades].reverse().indexOf(trade)))">
+                            {{ formatValue(getCumulativeSum([...list.trades].reverse().indexOf(trade))) }}
+                        </span>
+                    </div>
+                    <div v-if="isGainMode()">
+                        <span :class="getValueClass(getGainValue(trade))">
+                            {{ formatValue(getGainValue(trade)) }}
+                        </span>
+                    </div>
+                    <div v-if="isGainMode()">
+                        <span :class="getValueClass(getCumulativeGain([...list.trades].reverse().indexOf(trade)))">
+                            {{ formatValue(getCumulativeGain([...list.trades].reverse().indexOf(trade))) }}
                         </span>
                     </div>
                     <div class="flex items-center gap-2 w-full">
-                        <UInput
-                            v-model="trade.comment"
-                            @change="updateTradeComment(trade.id, trade.comment)"
-                            :placeholder="$t('trades.commentPlaceholder')"
-                            class="w-full"
-                        />
+                        <UInput v-model="trade.comment" @change="updateTradeComment(trade.id, trade.comment)" :placeholder="$t('trades.commentPlaceholder')" class="w-full" />
                     </div>
                 </div>
                 <div v-if="list.trades.length === 0" class="text-gray-500 text-center py-2">
@@ -80,6 +84,7 @@
 
 <script setup lang="ts">
 import type { TradeList } from '~/types'
+import { getWinRate, getGain } from '~/utils/trade'
 const { t } = useI18n()
 
 const props = defineProps<{
@@ -95,6 +100,29 @@ const emit = defineEmits<{
 }>()
 
 const settings = ref<any>(null)
+const selectedMode = ref(props.list.mode || 'normal')
+
+const isGainMode = () => {
+    return selectedMode.value === 'mode1' || selectedMode.value === 'mode0'
+}
+
+// Émettre un événement quand le mode change
+watch(selectedMode, async (newMode) => {
+    try {
+        const response = await fetch(`/api/trade-lists/${props.list.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mode: newMode })
+        })
+        if (!response.ok) {
+            console.error('Failed to update mode')
+        }
+    } catch (error) {
+        console.error('Error updating mode:', error)
+    }
+})
 
 // Charger les paramètres
 onMounted(async () => {
@@ -131,13 +159,27 @@ const getCumulativeSum = (currentIndex: number): number => {
         .reduce((sum, trade) => sum + trade.points, 0)
 }
 
-const getWinRate = (): number => {
-    if (!props.list?.trades || props.list.trades.length === 0) return 0
-    const winningTrades = props.list.trades.filter(trade => trade.points > 0).length
-    const totalTrades = settings.value?.options?.winrateForNull 
-        ? props.list.trades.length 
-        : props.list.trades.filter(trade => trade.points !== 0).length
-    return Math.round((winningTrades / totalTrades) * 100)
+const getCumulativeGain = (currentIndex: number): number => {
+    if (!props.list?.trades) return 0
+    return [...props.list.trades]
+        .reverse()
+        .slice(currentIndex)
+        .reduce((sum, trade) => sum + getGain(trade, selectedMode.value), 0)
 }
 
+const getValueClass = (value: number): string => {
+    return value >= 0 ? 'text-green-600' : 'text-red-600'
+}
+
+const formatValue = (value: number): string => {
+    return value > 0 ? `+${value}` : `${value}`
+}
+
+const getWinRateValue = (): number => {
+    return getWinRate(props.list, settings.value)
+}
+
+const getGainValue = (trade: any): number => {
+    return getGain(trade, selectedMode.value)
+}
 </script>

@@ -102,26 +102,6 @@ const createList = async () => {
     }
 }
 
-// Ajouter un trade
-const addTrade = async (listId: number, points: number) => {
-    try {
-        const newTrade = await $fetch(`/api/lists/${listId}/trades`, {
-            method: 'POST',
-            body: { points }
-        })
-        const list = lists.value?.find(l => l.id === listId)
-        if (list) {
-            // Convert createdAt string to Date object before adding to list
-            list.trades.push({
-                ...newTrade,
-                createdAt: new Date(newTrade.createdAt)
-            })
-        }
-    } catch (error) {
-        console.error('Erreur lors de l\'ajout du trade:', error)
-    }
-}
-
 // Supprimer une liste
 const deleteList = async (listId: number) => {
     if (!confirm(t('lists.confirmDelete'))) {

@@ -9,7 +9,7 @@
                 <label for="winrateForNull">{{ $t('settings.winrateForNull') }}</label>
             </div>
         </div>
-
+       
         <div class="bg-white shadow rounded-lg p-6">
             <h2 class="text-xl font-semibold mb-4">{{ $t('settings.pointValues') }}</h2>
 
