@@ -11,7 +11,8 @@ RUN corepack enable \
     && corepack prepare pnpm@9.15.4 --activate
 
 # Copy package files and prisma schema
-COPY package.json pnpm-lock.yaml ./
+#COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 COPY prisma ./prisma/
 
 RUN pnpm install
